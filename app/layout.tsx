@@ -17,14 +17,36 @@ export const metadata: Metadata = {
   description: "Track your social media views across TikTok, YouTube, and Instagram in real-time.",
 };
 
+import ThemeToggle from "@/components/ThemeToggle";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+                  if (!theme && supportDarkMode) theme = 'dark';
+                  if (!theme) theme = 'dark'; // default to dark
+                  document.documentElement.setAttribute('data-theme', theme);
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body>
+        <ThemeToggle />
+        {children}
+      </body>
     </html>
   );
 }

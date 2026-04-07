@@ -1,17 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface InputSectionProps {
   onSearch: (handles: { tiktok: string; youtube: string; instagram: string }) => void;
   onRefresh: () => void;
+  onHandlesChange: (handles: { tiktok: string; youtube: string; instagram: string }) => void;
   loading: boolean;
 }
 
-export default function InputSection({ onSearch, onRefresh, loading }: InputSectionProps) {
+export default function InputSection({ onSearch, onRefresh, onHandlesChange, loading }: InputSectionProps) {
   const [tiktok, setTiktok] = useState('');
   const [youtube, setYoutube] = useState('');
   const [instagram, setInstagram] = useState('');
+
+  // Call onHandlesChange whenever any input changes
+  useEffect(() => {
+    onHandlesChange({ tiktok, youtube, instagram });
+  }, [tiktok, youtube, instagram, onHandlesChange]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

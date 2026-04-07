@@ -63,6 +63,25 @@ export default function Home() {
     setLoading(false);
   };
 
+  const handleHandlesChange = useCallback((newHandles: { tiktok: string; youtube: string; instagram: string }) => {
+    setHandles(newHandles);
+    
+    // Clear data if handle is empty in real-time
+    setData((prev) => ({
+      tiktok: newHandles.tiktok ? prev.tiktok : null,
+      youtube: newHandles.youtube ? prev.youtube : null,
+      instagram: newHandles.instagram ? prev.instagram : null,
+    }));
+    
+    // Clear errors as well
+    setErrors((prev) => ({
+      ...prev,
+      tiktok: newHandles.tiktok ? prev.tiktok : undefined,
+      youtube: newHandles.youtube ? prev.youtube : undefined,
+      instagram: newHandles.instagram ? prev.instagram : undefined,
+    }));
+  }, []);
+
   const handleRefresh = useCallback(() => {
     if (handles.tiktok || handles.youtube || handles.instagram) {
       handleSearch(handles);
@@ -83,6 +102,7 @@ export default function Home() {
       <InputSection 
         onSearch={handleSearch} 
         onRefresh={handleRefresh} 
+        onHandlesChange={handleHandlesChange}
         loading={loading} 
       />
 
